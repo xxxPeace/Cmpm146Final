@@ -3,6 +3,35 @@ import time
 filename = ""
 grid = []
 
+def method():
+    count =0
+    tempTurnToflag ={}
+    turnToflag = {}
+    for j in range(len(grid)):
+        for i in range(len(grid[0])):
+            count =0
+            tempTurnToflag ={}
+            for num in range(1,8):
+                if grid[i][j] == str(num):
+                    #print adj(i,j)
+                    adjBox = adj(i,j)
+                    for element in adjBox:
+
+                        #print element
+                        if adjBox[element] == "W":
+                            count += 1
+                            tempTurnToflag[element] = "F"
+                    if count == num:
+                        #print tempTurnToflag
+                        #z always equal to none
+                        z = turnToflag.update(tempTurnToflag)
+    print turnToflag
+    f = open('out.txt', 'w')
+    print >> f, turnToflag
+    f.close()
+
+
+
 def display():
     for j in range(len(grid)):
         row = ""
@@ -10,11 +39,21 @@ def display():
         for i in range(len(grid[0])):
             row += str(grid[i][j] + " ")
         print(row + "\n")
+    #print grid
 
-def graph(point):
-    for dx in [-1, 0, 1]:
-        for dy in [-1, 0, 1]:
-            nextPoint = (x + dx, y + dy)
+def adj(x,y):
+    nextBox={}
+    for dy in [-1, 0, 1]:
+        for dx in [-1, 0, 1]:
+            if (x+dx >= 0 and y+dy >= 0):
+                nextBox[(x+dx,y+dy)]=grid[x+dx][y+dy]
+    return nextBox
+            
+
+#def graph(point):
+#   for dx in [-1, 0, 1]:
+#      for dy in [-1, 0, 1]:
+#         nextPoint = (x + dx, y + dy)
 
 def load():
     file = open(filename, "r")
@@ -47,6 +86,7 @@ def load():
         y += 1
 
     display()
+    method()
 
 def loop():
     pass
