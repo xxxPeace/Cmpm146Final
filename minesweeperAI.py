@@ -1,4 +1,5 @@
 import time
+from heapq import heappush, heappop
 
 filename = ""
 grid = []
@@ -18,7 +19,7 @@ def method():
                     for element in adjBox:
 
                         #print element
-                        if adjBox[element] == "W":
+                        if adjBox[element] == "W" or adjBox[element]=="F":
                             count += 1
                             tempTurnToflag[element] = "F"
                     if count == num:
@@ -29,6 +30,80 @@ def method():
     f = open('out.txt', 'w')
     print >> f, turnToflag
     f.close()
+
+def methodProbability():
+    count =0
+    disElement = []
+    elementValue = {}
+
+    for j in range(len(grid)):
+        for i in range(len(grid[0])):
+            for num in range(1,8):
+                if grid[i][j] == str(num):
+                    adjBox = adj(i,j)
+                    for element in adjBox:
+                        if adjBox[element] == 'W':
+                            if element not in disElement:
+                                elementValue[element] = num
+                                disElement.append(element)
+                            else:
+                                elementValue[element] = elementValue[element] + num
+
+    print elementValue
+    f = open('outPribability.txt', 'w') 
+    for value in range(1,9):        
+        for choice in elementValue:
+            if count <=2:
+                if elementValue[choice] == value:
+                    print choice
+                                                       
+                    print >> f, choice
+                    count +=1
+    f.close()
+
+
+
+
+
+def methodMatrices():
+    dicUnclickedTiles= {}
+    unclickedTiles = []
+    equation = {}
+
+    for j in range(len(grid)):
+        for i in range(len(grid[0])):
+            unclickedTiles = []
+            equation = {}
+            for num in range(1,8):
+                if grid[i][j] == str(num):
+                    adjBox = adj(i,j)
+                    for element in adjBox:
+                        if adjBox[element] == "W":
+                            heappush(unclickedTiles, element)
+                            dicUnclickedTiles[element] = 'W'
+                    
+                    equation[num] = unclickedTiles
+                    #print equation
+    print dicUnclickedTiles
+    for wall in dicUnclickedTiles:
+        for j in range(len(grid)):
+            for i in range(len(grid[0])):
+                unclickedTiles = []
+                equation = {}
+                for num in range(1,8):
+                    if grid[i][j] == str(num):
+                        adjBox = adj(i,j)
+                        for element in adjBox:
+                            if adjBox[element] == "W":
+                                heappush(unclickedTiles, element)                   
+                        equation[num] = unclickedTiles
+                        for tiles in equation[num]:
+                            if tiles == wall:
+                                print equation
+        print
+
+
+
 
 
 
@@ -87,6 +162,8 @@ def load():
 
     display()
     method()
+    methodProbability()
+    #methodMatrices()
 
 def loop():
     pass
